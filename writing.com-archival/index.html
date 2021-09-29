@@ -428,7 +428,7 @@
                 }
             },
             created() {
-                fetch("http://107.189.28.249/storylist.json")
+                fetch("https://writingarchive.mooo.com/storylist.json")
                     .then(r => r.json())
                     .then(storylist => {
                         this.storylist = storylist;
@@ -694,7 +694,7 @@
                 }
 
                 Vue.prototype.$storyID = storyID
-                fetch("http://107.189.28.249/archive/" + storyID + "/story.json")
+                fetch("https://writingarchive.mooo.com/archive/" + storyID + "/story.json")
                     .then(r => r.json())
                     .then(story => {
                         Vue.prototype.$story = story;
