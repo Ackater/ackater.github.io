@@ -43,7 +43,14 @@
 
             <div class="d-flex justify-content-between">
                 <h4 class="float-left card-subtitle">Created by: <a
-                        v-bind:href="'https://www.writing.com/main/portfolio/view/' + $story.info.author_id">{{ $story.info.author_name }}</a>
+                        v-bind:href="'https://www.writing.com/main/portfolio/view/' + $story.info.author_id">
+                        <template v-if="$story.info.author_name">
+                            {{ $story.info.author_name }}
+                        </template>
+                        <template v-else>
+                            {{ $story.info.author_id }}
+                        </template>
+                    </a>
                 </h4>
                 <div class="btn-group btn-group-sm">
                     <router-link v-bind:to="{ name: 'info' }" class="btn btn-success">
@@ -170,7 +177,7 @@
 
                 <div class="list-group list-group-flush">
                     <router-link v-for="(index) in sorted_keys" v-bind:key="index" class="py-1 text-truncate list-group-item list-group-item-action"
-                        v-bind:to="{ path: index}">
+                        v-bind:to="{ path: index}" v-bind:class="deleted(index)">
                         <small>
                             {{ index }}
                         </small>
@@ -206,7 +213,12 @@
                             <small>  {{ created_date(chapter_index) }} </small>
                         </div>
                         <div>
-                            by {{ $story.chapters[chapter_index].author_name }}
+                            <template v-if=" $story.chapters[chapter_index].author_id">
+                                by {{ $story.chapters[chapter_index].author_id }}
+                            </template>
+                            <template v-else-if=" $story.chapters[chapter_index].author_name">
+                                by {{ $story.chapters[chapter_index].author_name }}
+                            </template>
                         </div>
                     </router-link>
                 </div>
@@ -231,13 +243,15 @@
                 <h5>
                     <template v-if="chapter.author_id">
                         by: 
-                        <a v-bind:href="'https://www.writing.com/main/portfolio/view/' + chapter.author_id">{{ chapter.author_name }}</a>
+                        <a v-bind:href="'https://www.writing.com/main/portfolio/view/' + chapter.author_id">
+                            <template v-if="chapter.author_name">{{ chapter.author_name }}</template><template v-else>{{ chapter.author_id }}</template>
+                        </a>
                     </template>
                     <template v-else-if="chapter.author_name">
                         by: {{ chapter.author_name }}
                     </template>
 
-                    <small class="text-muted"> on {{ created }} </small>
+                    <small class="text-muted" v-if="chapter.created"> on {{ created }} </small>
                 </h5>
             </header>
 
@@ -371,7 +385,7 @@
                         search = this.search.toLowerCase()
                         return this.sorted_list.filter(
                             (story_id) => {
-                                return this.storylist[story_id].brief_description.toLowerCase().includes(search) ||
+                                return (this.storylist[story_id].brief_description != null && this.storylist[story_id].brief_description.toLowerCase().includes(search)) ||
                                 this.storylist[story_id].author.toLowerCase().includes(search)||
                                 this.storylist[story_id].pretty_title.toLowerCase().includes(search)
                             }
@@ -446,6 +460,14 @@
                 //Javascript seems to store order of properties the object, so we have to get the keys and sort it
                 sorted_keys: function() {
                     return Object.keys(this.$story.chapters).sort()
+                }
+            },
+            methods: {
+                deleted: function(index) {
+                    if ("deleted" in this.$story.chapters[index]) {
+                        return "list-group-item-danger";
+                    }
+                    return;
                 }
             }
         })
