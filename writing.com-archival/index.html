@@ -213,11 +213,11 @@
                             <small>  {{ created_date(chapter_index) }} </small>
                         </div>
                         <div>
-                            <template v-if=" $story.chapters[chapter_index].author_id">
-                                by {{ $story.chapters[chapter_index].author_id }}
-                            </template>
-                            <template v-else-if=" $story.chapters[chapter_index].author_name">
+                            <template v-if=" $story.chapters[chapter_index].author_name">
                                 by {{ $story.chapters[chapter_index].author_name }}
+                            </template>
+                            <template v-else-if="$story.chapters[chapter_index].author_id">
+                                by {{ $story.chapters[chapter_index].author_id }}
                             </template>
                         </div>
                     </router-link>
