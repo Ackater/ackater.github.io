@@ -42,15 +42,15 @@
             </div>
 
             <div class="d-flex justify-content-between">
-                <h4 class="float-left card-subtitle">Created by: <a
-                        v-bind:href="'https://www.writing.com/main/portfolio/view/' + $story.info.author_id">
+                <h4 class="float-left card-subtitle">Created by: 
+                    <router-link v-bind:to="{name: 'author', params: {author: $story.info.author_id}}">
                         <template v-if="$story.info.author_name">
                             {{ $story.info.author_name }}
                         </template>
                         <template v-else>
                             {{ $story.info.author_id }}
                         </template>
-                    </a>
+                    </router-link>
                 </h4>
                 <div class="btn-group btn-group-sm">
                     <router-link v-bind:to="{ name: 'info' }" class="btn btn-success">
@@ -191,6 +191,39 @@
         </div>
     </script>
 
+    <script type="text/x-template" id="author-template">
+            <div class="col mt-1 mb-3">
+                <div class="card">
+                    <story-header></story-header>
+    
+                    <div class="card-body py-0">
+                        <h3 class="card-title">
+                        Chapters by {{author}}
+                        </h3>
+                    </div>
+    
+                    <div class="list-group list-group-flush">
+                        <router-link v-for="chapter_index in chapters" v-bind:key="chapter_index" class="flex-column align-items-start list-group-item list-group-item-action" v-bind:to="{name: 'chapter', params: {current_index: chapter_index} }">
+    
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1"> #{{ chapter_index.length }}: {{ $story.chapters[chapter_index].title }}
+                                </h5>
+                            </div>
+                            <div>
+                                <template v-if=" $story.chapters[chapter_index].author_name">
+                                    by {{ $story.chapters[chapter_index].author_name }}
+                                </template>
+                                <template v-else-if="$story.chapters[chapter_index].author_id">
+                                    by {{ $story.chapters[chapter_index].author_id }}
+                                </template>
+                            </div>
+                        </ul>
+                </div>  
+    
+                
+            </div>
+        </script>
+
 
     <script type="text/x-template" id="recent-template">
         <div class="col mt-1 mb-3">
@@ -243,9 +276,9 @@
                 <h5>
                     <template v-if="chapter.author_id">
                         by: 
-                        <a v-bind:href="'https://www.writing.com/main/portfolio/view/' + chapter.author_id">
+                        <router-link v-bind:to="{name: 'author', params: {author: chapter.author_id}}">
                             <template v-if="chapter.author_name">{{ chapter.author_name }}</template><template v-else>{{ chapter.author_id }}</template>
-                        </a>
+                        </router-link>
                     </template>
                     <template v-else-if="chapter.author_name">
                         by: {{ chapter.author_name }}
@@ -489,6 +522,19 @@
                 }
             }
         })
+        
+        const author_view = Vue.component('author-view', {
+            template: '#author-template',
+            props: ['author'],
+            computed: {
+                chapters: function() {
+                    author = this.author;
+                    return Object.keys(this.$story.chapters).filter(function(id) {
+                        return Vue.prototype.$story.chapters[id].author_id == author;
+                    });
+                }
+            }
+        })
 
         const search_view = Vue.component('search-view', {
             template: '#search-template',
@@ -666,6 +712,12 @@
                 path: '/:story/outline', 
                 component: outline_view,
                 name: 'outline',
+            },
+            { 
+                path: '/:story/author/:author', 
+                component: author_view,
+                name: 'author',
+                props: true 
             },
             { 
                 path: '/:story/:current_index/history', 
