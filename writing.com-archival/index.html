@@ -511,6 +511,13 @@
                 recent_indexes: function() {
                     return Object.keys(this.$story.chapters).sort(
                         function(a, b) {
+                            //Fix for undefined chapters, imported chapters from the old stuff that don't have created timestamps
+                            //TOO maybe fix that in the db
+                            if (typeof Vue.prototype.$story.chapters[b].created == 'undefined') {
+                                return -1 * Vue.prototype.$story.chapters[a].created
+                            } else if (typeof Vue.prototype.$story.chapters[a].created == 'undefined') {
+                                return Vue.prototype.$story.chapters[b].created
+                            }
                             return Vue.prototype.$story.chapters[b].created - Vue.prototype.$story.chapters[a].created;
                         }
                     ).slice(0, 20)
