@@ -144,6 +144,8 @@
                 <router-link class="btn btn-secondary" v-bind:class="[(page == 1) ? 'disabled' : '']" v-bind:to="{ name: 'search', params: buildParams('page', page - 1) }">Previous page</router-link>
                 <router-link class="btn btn-primary" v-bind:class="[(page >= total_pages) ? 'disabled' : '']" v-bind:to="{ name: 'search', params: buildParams('page', page + 1)}">Next page</router-link>
             </div>
+
+            <small><a href="https://docs.google.com/spreadsheets/d/1No4zjBzV81O9G3lNx6Z6ib3idqIdJEH_KCAcVkO0VnE/">Thanks to Estranhosidade's Archive</a></small>
         </div>
     </script>
 
