@@ -94,6 +94,7 @@
 
     <script type="text/x-template" id="index-template">
         <div class="col mt-1 mb-3">
+            <small><a href="https://writingarchive.neocities.org/">Alternative: Estranhosidade's Archive</a></small>
             <div class="d-flex justify-content-between">
                 <h3>Writing.com archive <small>Page {{ page }} / {{ total_pages }} </small>
                 </h3>
@@ -145,7 +146,6 @@
                 <router-link class="btn btn-primary" v-bind:class="[(page >= total_pages) ? 'disabled' : '']" v-bind:to="{ name: 'search', params: buildParams('page', page + 1)}">Next page</router-link>
             </div>
 
-            <small><a href="https://docs.google.com/spreadsheets/d/1No4zjBzV81O9G3lNx6Z6ib3idqIdJEH_KCAcVkO0VnE/">Thanks to Estranhosidade's Archive</a></small>
         </div>
     </script>
 
